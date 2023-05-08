@@ -12,6 +12,7 @@ import java.util.Random;
 public class RestaurantMain {
 
     public static void main(String[] args) {
+        /*
         try (MealDao mealDao = DaoFactory.getInstance().createMealDao();
                 UserDao userDao = DaoFactory.getInstance().createUserDao();
                 OrderDao orderDao = DaoFactory.getInstance().createOrderDao()) {
@@ -50,5 +51,6 @@ public class RestaurantMain {
         } finally {
             ConnectionPool.getInstance().closeAllConnections();
         }
+         */
     }
 }
