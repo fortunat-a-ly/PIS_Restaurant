@@ -8,6 +8,9 @@ public class Meal {
      private String name;
      private BigDecimal price;
 
+    public Meal(int id) {
+        this.id = id;
+    }
     public Meal(String name, BigDecimal price) {
         this.name = name;
         this.price = price;

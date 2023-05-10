@@ -2,18 +2,26 @@ package datasource.dao.mysqldao;
 
 import datasource.ConnectionPool;
 import datasource.dao.OrderDao;
+import datasource.entities.Meal;
 import datasource.entities.Order;
+import datasource.entities.OrderStatus;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCOrderDAO implements OrderDao {
 
-    private static final String QUERY_SELECT_ALL = "SELECT * FROM orders";
-    private static final String QUERY_SELECT_BY_ID = "SELECT * FROM orders WHERE id = ?";
-    private static final String QUERY_SELECT_BY_CUSTOMER_ID = "SELECT * FROM orders WHERE customer_id = ?";
-    private static final String QUERY_INSERT =  "INSERT INTO orders (meal_id, customer_id, quantity, status) VALUES (?, ?, ?, ?)";
+    private static final String QUERY_SELECT_ALL = "SELECT o.*, m.name, m.price FROM orders o " +
+            " JOIN meals m ON o.meal_id = m.id";
+    private static final String QUERY_SELECT_BY_ID = "SELECT o.*, m.name, m.price FROM orders o " +
+            " JOIN meals m ON o.meal_id = m.id" +
+            " WHERE o.id = ? ";
+    private static final String QUERY_SELECT_BY_CUSTOMER_ID = "SELECT o.*, m.name, m.price FROM orders o " +
+            " JOIN meals m ON o.meal_id = m.id" +
+            " WHERE o.customer_id = ?";
+    private static final String QUERY_INSERT =  "INSERT INTO orders (meal_id, customer_id, status) VALUES (?, ?, ?)";
     private static final String QUERY_UPDATE = "UPDATE orders SET  status = ? WHERE id = ?";
     private static final String QUERY_DELETE = "DELETE FROM orders WHERE id = ?";
     private final Connection conn;
@@ -70,8 +78,7 @@ public class JDBCOrderDAO implements OrderDao {
         try (PreparedStatement stmt = conn.prepareStatement(QUERY_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, order.getMealId());
             stmt.setInt(2, order.getCustomerId());
-            stmt.setInt(3, order.getQuantity());
-            stmt.setInt(4, order.getStatus());
+            stmt.setInt(3, order.getStatus().getCode());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -86,7 +93,7 @@ public class JDBCOrderDAO implements OrderDao {
     @Override
     public void updateOrder(Order order) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(QUERY_UPDATE)) {
-            stmt.setInt(1, order.getStatus());
+            stmt.setInt(1, order.getStatus().getCode());
             stmt.setInt(2, order.getId());
             stmt.executeUpdate();
         }
@@ -105,10 +112,11 @@ public class JDBCOrderDAO implements OrderDao {
         int clientId = rs.getInt("customer_id");
         int mealId = rs.getInt("meal_id");
         int status = rs.getInt("status");
-        int quantity = rs.getInt("quantity");
+        String mealName = rs.getString("name");
+        BigDecimal price = rs.getBigDecimal("price");
         Timestamp creationDate = rs.getTimestamp("creation_date");
 
-        return new Order(id, mealId, clientId, status, quantity, creationDate);
+        return new Order(id, new Meal(mealId, mealName, price), clientId, OrderStatus.fromCode(status), creationDate);
     }
 
     @Override

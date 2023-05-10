@@ -13,4 +13,13 @@ public enum UserRole {
     public int getCode() {
         return code;
     }
+
+    public static UserRole fromCode(int code) {
+        for (UserRole r : UserRole.values()) {
+            if (code == r.getCode()) {
+                return r;
+            }
+        }
+        return null;
+    }
 }

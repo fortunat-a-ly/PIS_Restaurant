@@ -14,4 +14,13 @@ public enum OrderStatus {
     public int getCode() {
         return code;
     }
+
+    public static OrderStatus fromCode(int code) {
+        for (OrderStatus r : OrderStatus.values()) {
+            if (code == r.getCode()) {
+                return r;
+            }
+        }
+        return null;
+    }
 }

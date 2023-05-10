@@ -7,6 +7,7 @@ import datasource.entities.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 
 public class RestaurantMain {
 
@@ -15,9 +16,10 @@ public class RestaurantMain {
                 UserDao userDao = DaoFactory.getInstance().createUserDao();
                 OrderDao orderDao = DaoFactory.getInstance().createOrderDao()) {
 
-            User admin = new User("admin@gmail.com", "pass", (short)UserRole.ADMINISTRATOR.getCode());
-            User customer = new User("customer@gmail.com", "password", (short)UserRole.CUSTOMER.getCode());
-            int adminId = userDao.addUser(admin);
+            Random rand = new Random();
+            //User admin = new User("admin@gmail.com", "pass", UserRole.ADMINISTRATOR);
+            User customer = new User("customer" + rand.nextInt() % 10000 + "@gmail.com", "password", UserRole.CUSTOMER);
+            //int adminId = userDao.addUser(admin);
             int customerId = userDao.addUser(customer);
 
             Meal pasta = new Meal("pasta", BigDecimal.TEN);
@@ -25,8 +27,8 @@ public class RestaurantMain {
             int pastaId = mealDao.addMeal(pasta);
             int breadId = mealDao.addMeal(bread);
 
-            Order order1 = new Order(pastaId, customerId, OrderStatus.PREPARING.getCode(), 1);
-            Order order2 = new Order(breadId, customerId, OrderStatus.PREPARING.getCode(), 2);
+            Order order1 = new Order(pastaId, customerId, OrderStatus.PREPARING);
+            Order order2 = new Order(breadId, customerId, OrderStatus.PREPARING);
             int pastaOrderId = orderDao.addOrder(order1);
             int breadOrderId = orderDao.addOrder(order2);
 

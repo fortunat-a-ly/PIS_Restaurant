@@ -3,6 +3,7 @@ package datasource.dao.mysqldao;
 import datasource.ConnectionPool;
 import datasource.dao.UserDao;
 import datasource.entities.User;
+import datasource.entities.UserRole;
 
 import java.sql.*;
 
@@ -31,7 +32,7 @@ public class JDBCUserDAO implements UserDao {
                     String password = rs.getString("password");
                     String email = rs.getString("email");
 
-                    user = new User(id, email, password, role);
+                    user = new User(id, email, password, UserRole.fromCode(role));
                 }
             }
         }
@@ -50,7 +51,7 @@ public class JDBCUserDAO implements UserDao {
                     String password = rs.getString("password");
                     short role = rs.getShort("role");
 
-                    user = new User(id, email, password, role);
+                    user = new User(id, email, password, UserRole.fromCode(role));
                 }
             }
         }
@@ -62,7 +63,7 @@ public class JDBCUserDAO implements UserDao {
         try (PreparedStatement stmt = conn.prepareStatement(QUERY_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getPassword());
-            stmt.setShort(3, user.getRole());
+            stmt.setInt(3, user.getRole().getCode());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {

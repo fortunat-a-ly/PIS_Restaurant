@@ -4,41 +4,29 @@ import java.sql.Timestamp;
 
 public class Order {
     private int id;
-    private int mealId;
+    private Meal meal;
     private int customerId;
-    private int status;
-    private int quantity;
+    private OrderStatus status;
     private Timestamp timestamp;
 
-    public Order(int mealId, int customerId, int status, int quantity, Timestamp timestamp) {
-        this.mealId = mealId;
+    public Order(int mealId, int customerId, OrderStatus status, Timestamp timestamp) {
+        this.meal = new Meal(mealId);
         this.customerId = customerId;
         this.status = status;
-        this.quantity = quantity;
         this.timestamp = timestamp;
     }
 
-    public Order(int mealId, int customerId, int status, int quantity) {
-        this.mealId = mealId;
+    public Order(int mealId, int customerId, OrderStatus status) {
+        this.meal = new Meal(mealId);
         this.customerId = customerId;
         this.status = status;
-        this.quantity = quantity;
     }
 
-    public Order(int id, int mealId, int customerId, int status, int quantity, Timestamp timestamp) {
+    public Order(int id, Meal meal, int customerId, OrderStatus status, Timestamp timestamp) {
         this.id = id;
-        this.mealId = mealId;
+        this.meal = meal;
         this.customerId = customerId;
         this.status = status;
-        this.quantity = quantity;
-        this.timestamp = timestamp;
-    }
-    public Order(int id, int mealId, int customerId, short status, short quantity, Timestamp timestamp) {
-        this.id = id;
-        this.mealId = mealId;
-        this.customerId = customerId;
-        this.status = status;
-        this.quantity = quantity;
         this.timestamp = timestamp;
     }
 
@@ -51,11 +39,11 @@ public class Order {
     }
 
     public int getMealId() {
-        return mealId;
+        return meal.getId();
     }
 
     public void setMealId(int mealId) {
-        this.mealId = mealId;
+        this.meal.setId(mealId);
     }
 
     public int getCustomerId() {
@@ -66,11 +54,11 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public int getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -82,22 +70,13 @@ public class Order {
         this.timestamp = timestamp;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", mealId=" + mealId +
+                ", meal=" + meal +
                 ", customerId=" + customerId +
                 ", status=" + status +
-                ", quantity=" + quantity +
                 ", timestamp=" + timestamp +
                 '}';
     }
